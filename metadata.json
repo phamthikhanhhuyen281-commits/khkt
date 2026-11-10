@@ -1,0 +1,8 @@
+{
+  "name": "AgriVision AI",
+  "description": "Nền tảng AI hỗ trợ nhận diện và chẩn đoán sơ bộ dịch bệnh cây trồng (Cam chanh, Lúa, Lạc) vùng Bắc Trung Bộ, tích hợp dữ liệu nghiên cứu khoa học nông nghiệp.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

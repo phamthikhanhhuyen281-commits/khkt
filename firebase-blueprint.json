@@ -1,0 +1,109 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User account profile and role information",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 256 },
+        "displayName": { "type": "string", "maxLength": 128 },
+        "role": { "type": "string", "enum": ["user", "researcher", "administrator"] },
+        "createdAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "email", "role"]
+    },
+    "DiseaseRecord": {
+      "title": "DiseaseRecord",
+      "description": "Verified botanical disease information for regional crops",
+      "type": "object",
+      "properties": {
+        "diseaseId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "cropType": { "type": "string", "enum": ["citrus", "rice", "peanut"] },
+        "vietnameseName": { "type": "string", "maxLength": 256 },
+        "englishName": { "type": "string", "maxLength": 256 },
+        "symptoms": { "type": "string", "maxLength": 5000 },
+        "affectedPlantParts": { "type": "string", "maxLength": 256 },
+        "causes": { "type": "string", "maxLength": 2000 },
+        "favorableConditions": { "type": "string", "maxLength": 2000 },
+        "preventionMethods": { "type": "string", "maxLength": 5000 },
+        "safeManagement": { "type": "string", "maxLength": 5000 },
+        "references": { "type": "string", "maxLength": 2000 },
+        "verificationStatus": { "type": "string", "enum": ["verified", "draft", "pending_review"] },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["diseaseId", "cropType", "vietnameseName", "englishName", "verificationStatus"]
+    },
+    "DiagnosisRecord": {
+      "title": "DiagnosisRecord",
+      "description": "Farmer and user plant diagnosis records and AI predictions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "userEmail": { "type": "string", "maxLength": 256 },
+        "cropType": { "type": "string", "maxLength": 64 },
+        "plantPart": { "type": "string", "maxLength": 64 },
+        "imageUrl": { "type": "string", "maxLength": 10000 },
+        "imageQuality": { "type": "string", "maxLength": 64 },
+        "suspectedDiseases": { "type": "string", "maxLength": 1000 },
+        "verificationStatus": { "type": "string", "enum": ["unverified", "expert_verified", "corrected"] },
+        "expertNotes": { "type": "string", "maxLength": 2000 },
+        "createdAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "userId", "cropType", "createdAt"]
+    },
+    "ResearchSample": {
+      "title": "ResearchSample",
+      "description": "Scientific field image sample for disease evaluation and model metrics",
+      "type": "object",
+      "properties": {
+        "sampleId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "cropType": { "type": "string", "enum": ["citrus", "rice", "peanut"] },
+        "diseaseLabel": { "type": "string", "maxLength": 128 },
+        "location": { "type": "string", "maxLength": 256 },
+        "collectionDate": { "type": "string", "maxLength": 64 },
+        "imageSource": { "type": "string", "maxLength": 256 },
+        "verificationStatus": { "type": "string", "enum": ["expert_verified", "pending", "unverified"] },
+        "aiPrediction": { "type": "string", "maxLength": 128 },
+        "isCorrect": { "type": "string", "enum": ["correct", "incorrect", "partial", "pending"] },
+        "notes": { "type": "string", "maxLength": 2000 },
+        "imageUrl": { "type": "string", "maxLength": 10000 },
+        "createdAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["sampleId", "cropType", "diseaseLabel", "verificationStatus"]
+    },
+    "AdminRecord": {
+      "title": "AdminRecord",
+      "description": "Administrator whitelist record for role authorization",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "maxLength": 256 },
+        "role": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["email", "role"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile with role and settings"
+    },
+    "/diseases/{diseaseId}": {
+      "schema": "DiseaseRecord",
+      "description": "Regional plant disease database managed by experts and admins"
+    },
+    "/diagnoses/{diagnosisId}": {
+      "schema": "DiagnosisRecord",
+      "description": "Individual diagnosis history records private to the user"
+    },
+    "/research_samples/{sampleId}": {
+      "schema": "ResearchSample",
+      "description": "Scientific field samples for research metrics and model validation"
+    },
+    "/admins/{userId}": {
+      "schema": "AdminRecord",
+      "description": "Admin authorization documents"
+    }
+  }
+}
