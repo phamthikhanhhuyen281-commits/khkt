@@ -12,7 +12,7 @@ import { RestrictedAccessView } from './components/auth/RestrictedAccessView';
 import { AccessMatrixModal } from './components/auth/AccessMatrixModal';
 import { PwaInstallBanner } from './components/pwa/PwaInstallBanner';
 import { CropType } from './types';
-import { Sprout, ShieldCheck } from 'lucide-react';
+import { Sprout } from 'lucide-react';
 
 function AppContent() {
   const { isResearcher } = useAuth();
@@ -41,12 +41,10 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8faf8] text-stone-900 flex flex-col font-sans selection:bg-emerald-200 selection:text-emerald-950">
-      {/* Navigation Header */}
+    <div className="min-h-screen bg-[#f6f9f6] text-stone-900 flex flex-col font-sans selection:bg-emerald-200 selection:text-emerald-950">
       <Header activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      {/* Main Workspace Content */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 pb-24 md:pb-10">
         {activeTab === 'home' && (
           <HomeDashboard
             onStartScan={handleStartScan}
@@ -95,38 +93,21 @@ function AppContent() {
         )}
       </main>
 
-      {/* Access Matrix Modal */}
       <AccessMatrixModal isOpen={isMatrixOpen} onClose={() => setIsMatrixOpen(false)} />
-
-      {/* PWA Install Banner */}
       <PwaInstallBanner />
-
-      {/* Mobile Bottom Navigation */}
       <MobileNav activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      {/* Scientific Footer */}
-      <footer className="hidden md:block bg-white border-t border-stone-200 mt-auto py-8 text-stone-500 text-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <footer className="hidden md:block bg-white border-t border-stone-200 mt-auto py-5 text-stone-600 text-sm">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-lg bg-emerald-800 text-white flex items-center justify-center">
+            <div className="w-6 h-6 rounded-lg bg-emerald-700 text-white flex items-center justify-center">
               <Sprout className="w-4 h-4" />
             </div>
-            <span className="font-bold text-stone-900">AgriVision AI</span>
+            <span className="font-bold text-stone-900">AgriVision</span>
             <span className="text-stone-400">•</span>
-            <span>Dự án Nghiên cứu Khoa học & Ứng dụng Bệnh học Thực vật Bắc Trung Bộ</span>
+            <span>Hỗ trợ bà con nhận biết bệnh cây Cam, Lúa, Lạc</span>
           </div>
-
-          <div className="flex items-center gap-4 text-stone-500">
-            <span>Cam chanh Nghệ An/Hà Tĩnh</span>
-            <span>•</span>
-            <span>Lúa nước</span>
-            <span>•</span>
-            <span>Cây Lạc</span>
-            <span>•</span>
-            <span className="text-emerald-800 font-semibold flex items-center gap-1">
-              <ShieldCheck className="w-3.5 h-3.5" /> Responsible AI
-            </span>
-          </div>
+          <span className="text-stone-500">Dễ nhìn • Dễ dùng</span>
         </div>
       </footer>
     </div>

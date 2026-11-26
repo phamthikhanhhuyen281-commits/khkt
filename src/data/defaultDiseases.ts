@@ -18,7 +18,7 @@ export const DEFAULT_DISEASES: DiseaseRecord[] = [
     verifiedBy: 'Viện Bảo vệ Thực vật Việt Nam & Viện KHKT Nông nghiệp Bắc Trung Bộ (ASIR)',
     standardCode: 'QCVN 01-165:2014/BNNPTNT (Quy chuẩn kỹ thuật quốc gia về kiểm dịch thực vật)',
     reviewDate: '2026-02-15',
-    sampleImageUrl: 'https://images.unsplash.com/photo-1596724898150-14902120e36a?auto=format&fit=crop&w=800&q=80',
+    sampleImageUrl: '/images/citrus_leaf_hlb.jpg',
     createdAt: '2026-01-10T00:00:00.000Z',
     updatedAt: '2026-03-01T00:00:00.000Z'
   },
@@ -38,7 +38,7 @@ export const DEFAULT_DISEASES: DiseaseRecord[] = [
     verifiedBy: 'Phòng Bệnh học Thực vật - Viện Bảo vệ Thực vật (NIPP)',
     standardCode: 'QCVN 01-19:2010/BNNPTNT; FAO Citrus Pathology Guidelines',
     reviewDate: '2026-02-20',
-    sampleImageUrl: 'https://images.unsplash.com/photo-1582284540020-8acbe03f4924?auto=format&fit=crop&w=800&q=80',
+    sampleImageUrl: '/images/citrus_leaf_hlb.jpg',
     createdAt: '2026-01-15T00:00:00.000Z',
     updatedAt: '2026-03-01T00:00:00.000Z'
   },
@@ -58,7 +58,7 @@ export const DEFAULT_DISEASES: DiseaseRecord[] = [
     verifiedBy: 'Trung tâm Khuyến nông Quốc gia & Chi cục Trồng trọt - BVTV Nghệ An',
     standardCode: 'TCVN 9308:2012 (Quy trình quản lý dịch hại trên cây ăn quả có múi)',
     reviewDate: '2026-02-25',
-    sampleImageUrl: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=800&q=80',
+    sampleImageUrl: '/images/citrus_leaf_hlb.jpg',
     createdAt: '2026-01-20T00:00:00.000Z',
     updatedAt: '2026-03-01T00:00:00.000Z'
   },
@@ -80,7 +80,7 @@ export const DEFAULT_DISEASES: DiseaseRecord[] = [
     verifiedBy: 'Viện Nghiên cứu Lúa Quốc tế (IRRI) & Viện BVTV Việt Nam',
     standardCode: 'QCVN 01-36:2010/BNNPTNT (Quy chuẩn điều tra phát hiện bệnh đạo ôn lúa)',
     reviewDate: '2026-03-01',
-    sampleImageUrl: 'https://images.unsplash.com/photo-1536939459926-301728717817?auto=format&fit=crop&w=800&q=80',
+    sampleImageUrl: '/images/rice_leaf_blast.jpg',
     createdAt: '2026-01-10T00:00:00.000Z',
     updatedAt: '2026-03-01T00:00:00.000Z'
   },
@@ -100,7 +100,7 @@ export const DEFAULT_DISEASES: DiseaseRecord[] = [
     verifiedBy: 'Viện Bảo vệ Thực vật (VAAS) & Chi cục Trồng trọt & BVTV Hà Tĩnh',
     standardCode: 'QCVN 01-38:2010/BNNPTNT (Quy chuẩn phòng trừ bệnh bạc lá lúa)',
     reviewDate: '2026-03-01',
-    sampleImageUrl: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=800&q=80',
+    sampleImageUrl: '/images/rice_leaf_blast.jpg',
     createdAt: '2026-01-12T00:00:00.000Z',
     updatedAt: '2026-03-01T00:00:00.000Z'
   },
@@ -120,7 +120,7 @@ export const DEFAULT_DISEASES: DiseaseRecord[] = [
     verifiedBy: 'Hội đồng Khoa học Viện Khoa học Nông nghiệp Việt Nam (VAAS)',
     standardCode: 'QCVN 01-37:2010/BNNPTNT; Quy trình IPM lúa quốc gia',
     reviewDate: '2026-03-01',
-    sampleImageUrl: 'https://images.unsplash.com/photo-1595878715977-2e8f8df18ea8?auto=format&fit=crop&w=800&q=80',
+    sampleImageUrl: '/images/rice_leaf_blast.jpg',
     createdAt: '2026-01-14T00:00:00.000Z',
     updatedAt: '2026-03-01T00:00:00.000Z'
   },
@@ -140,7 +140,7 @@ export const DEFAULT_DISEASES: DiseaseRecord[] = [
     verifiedBy: 'Viện KHKT Nông nghiệp Bắc Trung Bộ (ASIR) - Bộ phận Canh tác lúa duyên hải',
     standardCode: 'IRRI Standard Evaluation System for Rice (SES)',
     reviewDate: '2026-03-02',
-    sampleImageUrl: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=800&q=80',
+    sampleImageUrl: '/images/rice_leaf_blast.jpg',
     createdAt: '2026-01-18T00:00:00.000Z',
     updatedAt: '2026-03-01T00:00:00.000Z'
   },
@@ -162,7 +162,7 @@ export const DEFAULT_DISEASES: DiseaseRecord[] = [
     verifiedBy: 'Bộ môn Cây thực phẩm - Viện Khoa học Nông nghiệp Bắc Trung Bộ',
     standardCode: 'Quy trình kỹ thuật thâm canh và BVTV cây lạc thâm canh Nghệ An',
     reviewDate: '2026-03-02',
-    sampleImageUrl: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=800&q=80',
+    sampleImageUrl: '/images/peanut_leaf_spot.jpg',
     createdAt: '2026-01-11T00:00:00.000Z',
     updatedAt: '2026-03-01T00:00:00.000Z'
   },
@@ -182,7 +182,7 @@ export const DEFAULT_DISEASES: DiseaseRecord[] = [
     verifiedBy: 'Viện Bảo vệ Thực vật & Viện ICRISAT',
     standardCode: 'ICRISAT Groundnut Rust Compendium; TCVN Bảo vệ thực vật',
     reviewDate: '2026-03-02',
-    sampleImageUrl: 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?auto=format&fit=crop&w=800&q=80',
+    sampleImageUrl: '/images/peanut_leaf_spot.jpg',
     createdAt: '2026-01-16T00:00:00.000Z',
     updatedAt: '2026-03-01T00:00:00.000Z'
   },
@@ -202,7 +202,7 @@ export const DEFAULT_DISEASES: DiseaseRecord[] = [
     verifiedBy: 'Khoa Nông học - Đại học Nông Lâm Huế & Viện ASIR',
     standardCode: 'Đề tài Khoa học Bệnh héo rũ cây đậu đỗ miền Trung',
     reviewDate: '2026-03-03',
-    sampleImageUrl: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=800&q=80',
+    sampleImageUrl: '/images/peanut_leaf_spot.jpg',
     createdAt: '2026-01-22T00:00:00.000Z',
     updatedAt: '2026-03-01T00:00:00.000Z'
   }

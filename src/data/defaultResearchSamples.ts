@@ -13,7 +13,7 @@ export const DEFAULT_RESEARCH_SAMPLES: ResearchSample[] = [
     aiPrediction: 'Bệnh Vàng lá gân xanh (HLB)',
     confidenceLevel: 'high',
     isCorrect: 'correct',
-    imageUrl: 'https://images.unsplash.com/photo-1596724898150-14902120e36a?auto=format&fit=crop&w=600&q=80',
+    imageUrl: '/images/citrus_leaf_hlb.jpg',
     notes: 'Mẫu lá cam Xã Đoài biểu hiện gân xanh vàng loang lổ rõ nét, đối chứng PCR dương tính Ca. Liberibacter asiaticus.',
     createdAt: '2026-02-15T08:30:00Z'
   },
@@ -28,7 +28,7 @@ export const DEFAULT_RESEARCH_SAMPLES: ResearchSample[] = [
     aiPrediction: 'Bệnh Loét cam quýt (Bacterial Canker)',
     confidenceLevel: 'high',
     isCorrect: 'correct',
-    imageUrl: 'https://images.unsplash.com/photo-1582284540020-8acbe03f4924?auto=format&fit=crop&w=600&q=80',
+    imageUrl: '/images/citrus_leaf_hlb.jpg',
     notes: 'Vết loét sần sùi có quầng vàng trên lá bánh tẻ, bùng phát sau bão số 4.',
     createdAt: '2026-02-19T09:15:00Z'
   },
@@ -43,7 +43,7 @@ export const DEFAULT_RESEARCH_SAMPLES: ResearchSample[] = [
     aiPrediction: 'Bệnh Ghẻ sẹo cam quýt (Citrus Scab)',
     confidenceLevel: 'medium',
     isCorrect: 'correct',
-    imageUrl: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=600&q=80',
+    imageUrl: '/images/citrus_leaf_hlb.jpg',
     notes: 'Mụn gai hình nón sừng trên mặt dưới lá non cam bù.',
     createdAt: '2026-02-23T11:00:00Z'
   },
@@ -58,7 +58,7 @@ export const DEFAULT_RESEARCH_SAMPLES: ResearchSample[] = [
     aiPrediction: 'Thiếu vi lượng kẽm / Magie',
     confidenceLevel: 'low',
     isCorrect: 'incorrect',
-    imageUrl: 'https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?auto=format&fit=crop&w=600&q=80',
+    imageUrl: '/images/citrus_leaf_hlb.jpg',
     notes: 'Giai đoạn đầu triệu chứng vàng gân nhầm lẫn với thiếu vi lượng kẽm, cần bổ sung ảnh góc chụp cuống quả hoặc kiểm tra rầy.',
     createdAt: '2026-02-26T14:20:00Z'
   },
@@ -75,7 +75,7 @@ export const DEFAULT_RESEARCH_SAMPLES: ResearchSample[] = [
     aiPrediction: 'Bệnh Đạo ôn lúa (Rice Blast)',
     confidenceLevel: 'high',
     isCorrect: 'correct',
-    imageUrl: 'https://images.unsplash.com/photo-1536939459926-301728717817?auto=format&fit=crop&w=600&q=80',
+    imageUrl: '/images/rice_leaf_blast.jpg',
     notes: 'Vết bệnh hình thoi nhọn hai đầu điển hình trên lá lúa BC15 vụ Đông Xuân ẩm độ 95%.',
     createdAt: '2026-03-02T10:00:00Z'
   },
@@ -90,7 +90,7 @@ export const DEFAULT_RESEARCH_SAMPLES: ResearchSample[] = [
     aiPrediction: 'Bệnh Bạc lá lúa (Bacterial Blight)',
     confidenceLevel: 'high',
     isCorrect: 'correct',
-    imageUrl: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=600&q=80',
+    imageUrl: '/images/rice_leaf_blast.jpg',
     notes: 'Mép lá gợn sóng khô trắng rơm, quan sát giọt dịch vi khuẩn đục vào sáng sớm.',
     createdAt: '2026-03-04T08:45:00Z'
   },
@@ -105,7 +105,7 @@ export const DEFAULT_RESEARCH_SAMPLES: ResearchSample[] = [
     aiPrediction: 'Bệnh Khô vằn lúa (Sheath Blight)',
     confidenceLevel: 'high',
     isCorrect: 'correct',
-    imageUrl: 'https://images.unsplash.com/photo-1595878715977-2e8f8df18ea8?auto=format&fit=crop&w=600&q=80',
+    imageUrl: '/images/rice_leaf_blast.jpg',
     notes: 'Đốm vân mây lan từ bẹ lá sát mặt nước lên phiến lá đòng.',
     createdAt: '2026-03-06T15:30:00Z'
   },
@@ -120,7 +120,7 @@ export const DEFAULT_RESEARCH_SAMPLES: ResearchSample[] = [
     aiPrediction: 'Bệnh Đốm nâu lúa (Brown Spot)',
     confidenceLevel: 'medium',
     isCorrect: 'correct',
-    imageUrl: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=600&q=80',
+    imageUrl: '/images/rice_leaf_blast.jpg',
     notes: 'Đốm mắt tròn màu nâu sẫm trên đất cát pha chua mặn.',
     createdAt: '2026-03-09T09:10:00Z'
   },
@@ -135,7 +135,7 @@ export const DEFAULT_RESEARCH_SAMPLES: ResearchSample[] = [
     aiPrediction: 'Bệnh Đốm nâu lúa (Brown Spot)',
     confidenceLevel: 'low',
     isCorrect: 'incorrect',
-    imageUrl: 'https://images.unsplash.com/photo-1628155930542-3c7a64e2c833?auto=format&fit=crop&w=600&q=80',
+    imageUrl: '/images/rice_leaf_blast.jpg',
     notes: 'Giai đoạn chấm kim non khó phân biệt với đốm nâu nếu không soi kính hiển vi bào tử conidia.',
     createdAt: '2026-03-11T16:00:00Z'
   },
@@ -152,7 +152,7 @@ export const DEFAULT_RESEARCH_SAMPLES: ResearchSample[] = [
     aiPrediction: 'Bệnh Đốm lá lạc (Leaf Spot)',
     confidenceLevel: 'high',
     isCorrect: 'correct',
-    imageUrl: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=600&q=80',
+    imageUrl: '/images/peanut_leaf_spot.jpg',
     notes: 'Đốm tròn nâu viền vàng rực rỡ mặt trên lá, giống lạc L14 vụ Xuân.',
     createdAt: '2026-03-13T10:15:00Z'
   },
@@ -167,7 +167,7 @@ export const DEFAULT_RESEARCH_SAMPLES: ResearchSample[] = [
     aiPrediction: 'Bệnh Gỉ sắt lạc (Groundnut Rust)',
     confidenceLevel: 'high',
     isCorrect: 'correct',
-    imageUrl: 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?auto=format&fit=crop&w=600&q=80',
+    imageUrl: '/images/peanut_leaf_spot.jpg',
     notes: 'Mụn nâu đỏ dưới mặt lá giải phóng bột nâu gỉ sắt khi chà nhẹ.',
     createdAt: '2026-03-15T11:40:00Z'
   },
@@ -182,7 +182,7 @@ export const DEFAULT_RESEARCH_SAMPLES: ResearchSample[] = [
     aiPrediction: 'Bệnh Thối trắng thân / Héo rũ gốc (Stem Rot)',
     confidenceLevel: 'high',
     isCorrect: 'correct',
-    imageUrl: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=600&q=80',
+    imageUrl: '/images/peanut_leaf_spot.jpg',
     notes: 'Màng sợi nấm trắng như bông kèm các hạt hạch nấm nâu tròn ở gốc sát mặt đất cát pha.',
     createdAt: '2026-03-17T14:50:00Z'
   },
@@ -197,7 +197,7 @@ export const DEFAULT_RESEARCH_SAMPLES: ResearchSample[] = [
     aiPrediction: 'Bệnh Gỉ sắt lạc (Groundnut Rust)',
     confidenceLevel: 'medium',
     isCorrect: 'incorrect',
-    imageUrl: 'https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&w=600&q=80',
+    imageUrl: '/images/peanut_leaf_spot.jpg',
     notes: 'Triệu chứng hỗn hợp đốm đen muộn trên lá già bị nhầm lẫn với gỉ sắt do lá khô quăn.',
     createdAt: '2026-03-19T08:20:00Z'
   },
@@ -212,7 +212,7 @@ export const DEFAULT_RESEARCH_SAMPLES: ResearchSample[] = [
     aiPrediction: 'Bệnh Thối trắng thân / Héo rũ gốc (Stem Rot)',
     confidenceLevel: 'high',
     isCorrect: 'correct',
-    imageUrl: 'https://images.unsplash.com/photo-1527842891421-42eec6e703ea?auto=format&fit=crop&w=600&q=80',
+    imageUrl: '/images/peanut_leaf_spot.jpg',
     notes: 'Hạch nấm hình thành sau 48h ủ ẩm trong buồng tiêu bản.',
     createdAt: '2026-03-21T13:00:00Z'
   }

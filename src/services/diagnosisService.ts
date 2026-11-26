@@ -9,7 +9,7 @@ import {
   orderBy,
   limit,
 } from 'firebase/firestore';
-import { db, handleFirestoreError, OperationType } from '../lib/firebase';
+import { auth, db, handleFirestoreError, OperationType } from '../lib/firebase';
 import { DiagnosisResult, DiagnosisHistoryItem, CropType, PlantPart } from '../types';
 
 const COLLECTION_NAME = 'diagnoses';
@@ -19,7 +19,22 @@ export async function runServerDiagnosis(
   imageBase64: string,
   cropType: CropType,
   plantPart: PlantPart,
-  mimeType: string = 'image/jpeg'
+  mimeType: string = 'image/jpeg',
+  visualMetrics?: {
+    healthyGreenRatio: number;
+    yellowRatio: number;
+    lesionRatio: number;
+    leafShape?: 'broadleaf_oval' | 'slender_blade' | 'compound_rounded_leaflets';
+    detectedCropHint?: 'citrus' | 'rice' | 'peanut' | 'unknown';
+    sharpnessScore?: number;
+    imageQuality?: 'good' | 'fair' | 'poor';
+    qualityIssues?: string[];
+    isBlurry?: boolean;
+    isTooDark?: boolean;
+    isOverexposed?: boolean;
+    sourceSampleId?: string;
+    filenameHint?: string;
+  }
 ): Promise<DiagnosisResult> {
   const response = await fetch('/api/diagnose', {
     method: 'POST',
@@ -31,6 +46,7 @@ export async function runServerDiagnosis(
       mimeType,
       cropType,
       plantPart,
+      visualMetrics,
     }),
   });
 
@@ -63,14 +79,13 @@ export async function saveDiagnosisRecord(
     console.warn('LocalStorage save error:', e);
   }
 
-  // Save to Firestore if authenticated
-  if (item.userId) {
+  // Save to Firestore only if signed into Firebase Auth
+  if (item.userId && auth.currentUser && auth.currentUser.uid === item.userId) {
     try {
       const docRef = doc(db, COLLECTION_NAME, id);
       await setDoc(docRef, fullItem);
     } catch (error) {
       handleFirestoreError(error, OperationType.CREATE, `${COLLECTION_NAME}/${id}`);
-      // Do not throw so user doesn't lose their diagnosis UI experience if offline
     }
   }
 
@@ -79,13 +94,17 @@ export async function saveDiagnosisRecord(
 
 export async function fetchUserDiagnoses(userId?: string, isAdminOrResearcher: boolean = false): Promise<DiagnosisHistoryItem[]> {
   try {
+    if (!auth.currentUser) {
+      return getLocalDiagnoses();
+    }
+
     const colRef = collection(db, COLLECTION_NAME);
     let q;
 
     if (isAdminOrResearcher && !userId) {
       // Admin review mode: fetch latest across all users
       q = query(colRef, limit(100));
-    } else if (userId) {
+    } else if (userId && auth.currentUser.uid === userId) {
       q = query(colRef, where('userId', '==', userId), limit(50));
     } else {
       return getLocalDiagnoses();
@@ -147,16 +166,16 @@ export async function updateDiagnosisVerification(
 }
 
 export async function deleteDiagnosisRecord(id: string): Promise<void> {
+  const local = getLocalDiagnoses().filter((item) => item.id !== id);
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(local));
+
+  if (!auth.currentUser) return;
+
   try {
     const docRef = doc(db, COLLECTION_NAME, id);
     await deleteDoc(docRef);
-
-    const local = getLocalDiagnoses().filter((item) => item.id !== id);
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(local));
   } catch (error) {
     handleFirestoreError(error, OperationType.DELETE, `${COLLECTION_NAME}/${id}`);
-    const local = getLocalDiagnoses().filter((item) => item.id !== id);
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(local));
   }
 }
 

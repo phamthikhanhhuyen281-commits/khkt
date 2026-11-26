@@ -7,7 +7,7 @@ interface RestrictedAccessViewProps {
 }
 
 export const RestrictedAccessView: React.FC<RestrictedAccessViewProps> = ({ onOpenAccessMatrix }) => {
-  const { user, signInWithGoogle, requestElevation } = useAuth();
+  const { user, openAuthModal, requestElevation } = useAuth();
   const [organization, setOrganization] = useState('');
   const [reason, setReason] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -16,7 +16,7 @@ export const RestrictedAccessView: React.FC<RestrictedAccessViewProps> = ({ onOp
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) {
-      alert('Vui lòng đăng nhập Google trước khi gửi đề xuất phân quyền.');
+      alert('Vui lòng đăng nhập trước khi gửi đề xuất phân quyền.');
       return;
     }
 
@@ -59,7 +59,7 @@ export const RestrictedAccessView: React.FC<RestrictedAccessViewProps> = ({ onOp
 
         {!user && (
           <button
-            onClick={() => signInWithGoogle()}
+            onClick={() => openAuthModal()}
             className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold bg-emerald-800 text-white hover:bg-emerald-900 shadow-xs cursor-pointer"
           >
             <LogIn className="w-4 h-4" />

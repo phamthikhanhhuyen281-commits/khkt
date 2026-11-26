@@ -1,16 +1,31 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User, onAuthStateChanged, signInWithPopup, signOut as fbSignOut } from 'firebase/auth';
-import { auth, googleProvider, db, handleFirestoreError, OperationType } from '../lib/firebase';
+import { onAuthStateChanged, signOut as fbSignOut } from 'firebase/auth';
+import { auth, db, handleFirestoreError, OperationType } from '../lib/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { UserRole } from '../types';
 import { submitRoleUpgradeRequest } from '../services/userService';
 
+export interface AppUser {
+  uid: string;
+  email: string | null;
+  phoneNumber?: string | null;
+  username?: string | null;
+  displayName: string | null;
+  photoURL: string | null;
+  authProvider: 'quick' | 'firebase';
+}
+
+const QUICK_PROFILE_STORAGE_KEY = 'agrivision_quick_profile';
+
 interface AuthContextType {
-  user: User | null;
+  user: AppUser | null;
   role: UserRole;
   realRole: UserRole;
   loading: boolean;
-  signInWithGoogle: () => Promise<void>;
+  isAuthModalOpen: boolean;
+  openAuthModal: () => void;
+  closeAuthModal: () => void;
+  quickSignInPhone: (phone: string) => void;
   signOut: () => Promise<void>;
   impersonateRole: (role: UserRole) => void;
   requestElevation: (role: 'researcher' | 'administrator', organization: string, reason: string) => Promise<void>;
@@ -23,47 +38,72 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// System Master Administrator Whitelist
 export const SYSTEM_ADMIN_EMAILS = [
   'phamthikhanhhuyen281@gmail.com',
+  'cl8593834@gmail.com',
 ];
 
+function loadSavedQuickProfile(): AppUser | null {
+  try {
+    const raw = localStorage.getItem(QUICK_PROFILE_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed.uid === 'string' && typeof parsed.displayName === 'string') {
+      return {
+        uid: parsed.uid,
+        email: null,
+        phoneNumber: typeof parsed.phoneNumber === 'string' ? parsed.phoneNumber : null,
+        username: null,
+        displayName: parsed.displayName,
+        photoURL: null,
+        authProvider: 'quick',
+      };
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  
-  // Real database-determined role
+  const [firebaseUser, setFirebaseUser] = useState<AppUser | null>(null);
+  const [quickUser, setQuickUser] = useState<AppUser | null>(() => loadSavedQuickProfile());
+
   const [realRole, setRealRole] = useState<UserRole>('user');
-  
-  // Currently viewed role (allows Admin previewing lower roles for testing)
   const [activeRole, setActiveRole] = useState<UserRole>('user');
   const [isImpersonating, setIsImpersonating] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
       if (currentUser) {
+        const mapped: AppUser = {
+          uid: currentUser.uid,
+          email: currentUser.email,
+          phoneNumber: currentUser.phoneNumber,
+          username: null,
+          displayName: currentUser.displayName,
+          photoURL: currentUser.photoURL,
+          authProvider: 'firebase',
+        };
+        setFirebaseUser(mapped);
+
         try {
           const userEmail = (currentUser.email || '').toLowerCase().trim();
           let assignedRole: UserRole = 'user';
 
-          // 1. Check if user is in master admin email list
           if (SYSTEM_ADMIN_EMAILS.includes(userEmail)) {
             assignedRole = 'administrator';
           } else {
-            // 2. Fetch role from Firestore
             const userRef = doc(db, 'users', currentUser.uid);
             const snap = await getDoc(userRef);
             if (snap.exists() && snap.data().role) {
               assignedRole = snap.data().role;
-            } else {
-              assignedRole = 'user';
             }
           }
 
           setRealRole(assignedRole);
-          
-          // Check if admin previously set an impersonation session
           const savedImpersonation = localStorage.getItem('agrivision_admin_preview_role') as UserRole | null;
           if (assignedRole === 'administrator' && savedImpersonation && savedImpersonation !== 'administrator') {
             setActiveRole(savedImpersonation);
@@ -73,29 +113,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setIsImpersonating(false);
           }
 
-          // Sync profile to Firestore
           const userRef = doc(db, 'users', currentUser.uid);
           await setDoc(userRef, {
             id: currentUser.uid,
             email: currentUser.email || '',
-            displayName: currentUser.displayName || 'Người dùng AgriVision',
+            displayName: currentUser.displayName || 'Bác Nông Dân',
             role: assignedRole,
             updatedAt: new Date().toISOString(),
           }, { merge: true });
-
         } catch (err) {
           handleFirestoreError(err, OperationType.GET, `users/${currentUser.uid}`);
-          // Fallback check
           if (SYSTEM_ADMIN_EMAILS.includes((currentUser.email || '').toLowerCase())) {
             setRealRole('administrator');
             setActiveRole('administrator');
           }
         }
       } else {
-        // Guest user default
-        setRealRole('user');
-        setActiveRole('user');
-        setIsImpersonating(false);
+        setFirebaseUser(null);
       }
       setLoading(false);
     });
@@ -103,18 +137,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => unsubscribe();
   }, []);
 
-  // ONLY real administrators can change viewed role to preview lower roles!
-  const impersonateRole = (newRole: UserRole) => {
-    if (realRole !== 'administrator') {
-      console.warn('Cảnh báo bảo mật: Bạn không có quyền quản trị để thay đổi cấp bậc.');
-      return;
-    }
+  const user = quickUser || firebaseUser;
 
+  const openAuthModal = () => setIsAuthModalOpen(true);
+  const closeAuthModal = () => setIsAuthModalOpen(false);
+
+  const quickSignInPhone = (rawPhone: string) => {
+    const cleaned = rawPhone.replace(/\s+/g, '').trim();
+    const profile: AppUser = {
+      uid: `farmer_phone_${cleaned}`,
+      email: null,
+      phoneNumber: cleaned,
+      username: null,
+      displayName: cleaned,
+      photoURL: null,
+      authProvider: 'quick',
+    };
+    setQuickUser(profile);
+    try {
+      localStorage.setItem(QUICK_PROFILE_STORAGE_KEY, JSON.stringify(profile));
+    } catch {
+      // ignore storage errors
+    }
+    setIsAuthModalOpen(false);
+  };
+
+  const impersonateRole = (newRole: UserRole) => {
+    if (realRole !== 'administrator') return;
     if (newRole === realRole) {
       resetImpersonation();
       return;
     }
-
     setActiveRole(newRole);
     setIsImpersonating(true);
     localStorage.setItem('agrivision_admin_preview_role', newRole);
@@ -132,37 +185,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     reason: string
   ) => {
     if (!user) {
-      throw new Error('Vui lòng đăng nhập để gửi yêu cầu phân quyền.');
+      throw new Error('Vui lòng đăng nhập trước khi gửi yêu cầu.');
     }
 
     await submitRoleUpgradeRequest(
       user.uid,
-      user.email || '',
-      user.displayName || 'Người dùng',
+      user.email || user.phoneNumber || '',
+      user.displayName || 'Bác Nông Dân',
       targetRole,
       organization,
       reason
     );
   };
 
-  const signInWithGoogle = async () => {
-    try {
-      await signInWithPopup(auth, googleProvider);
-    } catch (error) {
-      console.error('Lỗi đăng nhập Google:', error);
-      throw error;
-    }
-  };
-
   const signOut = async () => {
     try {
-      await fbSignOut(auth);
+      if (auth.currentUser) {
+        await fbSignOut(auth);
+      }
+    } finally {
+      setQuickUser(null);
+      setFirebaseUser(null);
       setRealRole('user');
       setActiveRole('user');
       setIsImpersonating(false);
+      localStorage.removeItem(QUICK_PROFILE_STORAGE_KEY);
       localStorage.removeItem('agrivision_admin_preview_role');
-    } catch (error) {
-      console.error('Lỗi đăng xuất:', error);
     }
   };
 
@@ -177,7 +225,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         role: activeRole,
         realRole,
         loading,
-        signInWithGoogle,
+        isAuthModalOpen,
+        openAuthModal,
+        closeAuthModal,
+        quickSignInPhone,
         signOut,
         impersonateRole,
         requestElevation,

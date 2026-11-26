@@ -68,7 +68,7 @@ export const ResearchAdminDashboard: React.FC = () => {
     aiPrediction: '',
     confidenceLevel: 'high',
     isCorrect: 'correct',
-    imageUrl: 'https://images.unsplash.com/photo-1596724898150-14902120e36a?auto=format&fit=crop&w=600&q=80',
+    imageUrl: '/images/citrus_leaf_hlb.jpg',
     notes: '',
   });
 
@@ -120,7 +120,7 @@ export const ResearchAdminDashboard: React.FC = () => {
         aiPrediction: newSample.aiPrediction || newSample.diseaseLabel,
         confidenceLevel: (newSample.confidenceLevel as ConfidenceLevel) || 'high',
         isCorrect: (newSample.isCorrect as any) || 'correct',
-        imageUrl: newSample.imageUrl || 'https://images.unsplash.com/photo-1596724898150-14902120e36a?auto=format&fit=crop&w=600&q=80',
+        imageUrl: newSample.imageUrl || '/images/citrus_leaf_hlb.jpg',
         notes: newSample.notes || '',
         createdAt: new Date().toISOString(),
       };

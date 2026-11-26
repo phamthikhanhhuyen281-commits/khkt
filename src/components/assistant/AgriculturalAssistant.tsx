@@ -1,17 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { 
-  Bot, 
-  Send, 
-  Sparkles, 
-  HelpCircle, 
-  User, 
-  CheckCircle2, 
-  AlertCircle, 
-  RefreshCw, 
-  BookOpen, 
-  Layers, 
+import {
+  MessageCircle,
+  Send,
+  User,
+  RefreshCw,
   X,
-  MapPin
 } from 'lucide-react';
 import { ChatMessage } from '../../types';
 
@@ -34,15 +27,8 @@ export const AgriculturalAssistant: React.FC<AgriculturalAssistantProps> = ({
     {
       id: 'welcome',
       sender: 'assistant',
-      content: `Xin chào! Tôi là Trợ lý Khoa học Nông nghiệp **AgriVision AI**, được huấn luyện chuyên sâu về bệnh học cây trồng vùng Bắc Trung Bộ (Cam chanh Nghệ An/Hà Tĩnh, Lúa nước, Cây Lạc).
-
-Tôi có thể hỗ trợ bạn:
-• Giải thích cơ chế bệnh sinh và triệu chứng lâm sàng.
-• Hướng dẫn góc chụp ảnh bổ sung để phân biệt các bệnh tương đồng.
-• Tư vấn biện pháp Quản lý Dịch hại Tổng hợp (IPM) và phòng ngừa an toàn sinh học.
-• Phân biệt các cặp bệnh dễ nhầm lẫn (ví dụ: *Đạo ôn vs Đốm nâu*, *Vàng lá HLB vs Thiếu kẽm*).
-
-Bạn đang băn khoăn về vấn đề gì trên đồng ruộng hôm nay?`,
+      content:
+        'Chào bác! Bác đang thấy cây Cam, Lúa hay Lạc có dấu hiệu gì lạ cứ nhắn hỏi ở đây nhé. Tôi sẽ giải thích thật dễ hiểu và chỉ cách chăm sóc an toàn cho vườn nhà mình.',
       timestamp: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
     },
   ]);
@@ -50,7 +36,6 @@ Bạn đang băn khoăn về vấn đề gì trên đồng ruộng hôm nay?`,
   const [input, setInput] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [activeContext, setActiveContext] = useState(initialContext);
-
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -64,11 +49,10 @@ Bạn đang băn khoăn về vấn đề gì trên đồng ruộng hôm nay?`,
   }, [messages, loading]);
 
   const quickQuestions = [
-    'Cách phân biệt bệnh Đạo ôn và Bạc lá trên lúa?',
-    'Tại sao cây cam bị vàng lá lốm đốm gân xanh?',
-    'Nên chụp thêm những góc nào để chẩn đoán chính xác hơn?',
-    'Biện pháp sinh học phòng trừ bệnh Thối trắng thân lạc?',
-    'Cách theo dõi cây phục hồi sau khi xử lý nấm bệnh?',
+    'Lúa bị đạo ôn thì chữa thế nào?',
+    'Cây cam bị vàng lá làm sao cứu?',
+    'Cách phòng bệnh đốm lá cây lạc?',
+    'Chụp ảnh lá cây sao cho rõ nét?',
   ];
 
   const handleSend = async (questionText?: string) => {
@@ -80,10 +64,12 @@ Bạn đang băn khoăn về vấn đề gì trên đồng ruộng hôm nay?`,
       sender: 'user',
       content: textToSend,
       timestamp: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
-      contextDiagnosis: activeContext ? {
-        crop: activeContext.crop,
-        suspectedDisease: activeContext.suspectedDisease || '',
-      } : undefined,
+      contextDiagnosis: activeContext
+        ? {
+            crop: activeContext.crop,
+            suspectedDisease: activeContext.suspectedDisease || '',
+          }
+        : undefined,
     };
 
     setMessages((prev) => [...prev, userMsg]);
@@ -102,24 +88,26 @@ Bạn đang băn khoăn về vấn đề gì trên đồng ruộng hôm nay?`,
       });
 
       if (!response.ok) {
-        throw new Error('Lỗi phản hồi từ máy chủ.');
+        throw new Error('Không kết nối được với máy chủ.');
       }
 
       const data = await response.json();
-      const botMsg: ChatMessage = {
-        id: `bot_${Date.now()}`,
-        sender: 'assistant',
-        content: data.reply || 'Không có câu trả lời phù hợp.',
-        timestamp: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
-      };
-      setMessages((prev) => [...prev, botMsg]);
-    } catch (err: any) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `bot_${Date.now()}`,
+          sender: 'assistant',
+          content: data.reply || 'Bác hỏi rõ hơn một chút để tôi trả lời chính xác nhé.',
+          timestamp: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
+        },
+      ]);
+    } catch {
       setMessages((prev) => [
         ...prev,
         {
           id: `bot_err_${Date.now()}`,
           sender: 'assistant',
-          content: 'Xin lỗi, hiện tại kết nối đến Trợ lý AI đang gián đoạn. Vui lòng kiểm tra lại kết nối mạng hoặc thử lại sau giây lát.',
+          content: 'Mạng đang hơi chập chờn, bác bấm gửi lại giúp tôi nhé.',
           timestamp: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
         },
       ]);
@@ -129,53 +117,39 @@ Bạn đang băn khoăn về vấn đề gì trên đồng ruộng hôm nay?`,
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-4 pb-20">
-      {/* Page Title */}
-      <div className="border-b border-stone-200 pb-3 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-stone-900 flex items-center gap-2">
-            <Bot className="w-6 h-6 text-emerald-700" />
-            <span>Trợ lý Khoa học Nông nghiệp AgriVision AI</span>
-          </h1>
-          <p className="text-xs text-stone-500 mt-0.5">
-            Tư vấn bệnh học thực vật có trách nhiệm • Phân biệt rõ thông tin kiểm chứng và suy luận AI
-          </p>
-        </div>
+    <div className="max-w-3xl mx-auto space-y-4 pb-6">
+      <div>
+        <h1 className="text-2xl sm:text-3xl font-bold text-stone-900">
+          Hỏi Bác Sĩ Cây Trồng
+        </h1>
+        <p className="text-base text-stone-600 mt-1">
+          Nhắn câu hỏi bằng tiếng Việt hoặc bấm chọn câu hỏi gợi ý bên dưới.
+        </p>
       </div>
 
-      {/* Active Scan Context Banner if present */}
       {activeContext && (
-        <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-3 sm:p-4 flex items-center justify-between animate-in fade-in">
-          <div className="flex items-center gap-3">
-            <span className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs font-bold shrink-0">
-              Mẫu
-            </span>
-            <div className="text-xs text-stone-700">
-              <span className="font-semibold text-emerald-950">Ngữ cảnh chẩn đoán đang thảo luận: </span>
-              <span>Cây {activeContext.crop} • Bệnh nghi ngờ: <strong>{activeContext.suspectedDisease || 'Chưa rõ'}</strong></span>
-              {activeContext.confidenceLevel && (
-                <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-sm bg-emerald-100 text-emerald-800">
-                  {activeContext.confidenceLevel}
-                </span>
-              )}
-            </div>
+        <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex items-center justify-between gap-3">
+          <div className="text-base text-stone-800">
+            <span className="font-bold text-emerald-950">Đang hỏi về lần khám vừa rồi: </span>
+            <span>{activeContext.crop}</span>
+            {activeContext.suspectedDisease && (
+              <span> — <strong>{activeContext.suspectedDisease}</strong></span>
+            )}
           </div>
           <button
             onClick={() => {
               setActiveContext(undefined);
               if (onClearContext) onClearContext();
             }}
-            className="p-1 text-stone-400 hover:text-stone-700 rounded-lg hover:bg-emerald-100/50"
-            title="Bỏ ngữ cảnh này"
+            className="p-2 text-stone-500 hover:text-stone-800 rounded-xl hover:bg-emerald-100 min-h-[40px] min-w-[40px] flex items-center justify-center cursor-pointer"
+            title="Đóng"
           >
-            <X className="w-4 h-4" />
+            <X className="w-5 h-5" />
           </button>
         </div>
       )}
 
-      {/* Main Chat Window */}
-      <div className="bg-white rounded-3xl border border-stone-200 shadow-sm flex flex-col h-[650px] overflow-hidden">
-        {/* Chat message history */}
+      <div className="bg-white rounded-2xl border border-stone-200 flex flex-col h-[560px] overflow-hidden">
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
           {messages.map((msg) => {
             const isBot = msg.sender === 'assistant';
@@ -185,35 +159,27 @@ Bạn đang băn khoăn về vấn đề gì trên đồng ruộng hôm nay?`,
                 className={`flex items-start gap-3 ${isBot ? 'justify-start' : 'justify-end'}`}
               >
                 {isBot && (
-                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-600 to-green-800 text-white flex items-center justify-center shrink-0 shadow-xs">
-                    <Bot className="w-4 h-4" />
+                  <div className="w-9 h-9 rounded-xl bg-emerald-700 text-white flex items-center justify-center shrink-0">
+                    <MessageCircle className="w-5 h-5" />
                   </div>
                 )}
 
                 <div
-                  className={`max-w-[85%] sm:max-w-[75%] rounded-2xl p-4 text-xs sm:text-sm leading-relaxed ${
+                  className={`max-w-[85%] sm:max-w-[78%] rounded-2xl p-4 text-base leading-relaxed ${
                     isBot
-                      ? 'bg-stone-50 border border-stone-200 text-stone-800 shadow-xs whitespace-pre-wrap'
-                      : 'bg-emerald-800 text-white font-medium shadow-xs'
+                      ? 'bg-stone-50 border border-stone-200 text-stone-900 whitespace-pre-wrap'
+                      : 'bg-emerald-700 text-white font-medium'
                   }`}
                 >
-                  {/* Context tag on user message */}
-                  {msg.contextDiagnosis && (
-                    <div className="text-[10px] text-emerald-200 mb-1 border-b border-emerald-700 pb-1 flex items-center gap-1">
-                      <span>Mẫu đính kèm: {msg.contextDiagnosis.crop} - {msg.contextDiagnosis.suspectedDisease}</span>
-                    </div>
-                  )}
-
                   <div>{msg.content}</div>
-
-                  <div className={`mt-2 text-[10px] text-right ${isBot ? 'text-stone-400' : 'text-emerald-200'}`}>
+                  <div className={`mt-2 text-xs text-right ${isBot ? 'text-stone-500' : 'text-emerald-100'}`}>
                     {msg.timestamp}
                   </div>
                 </div>
 
                 {!isBot && (
-                  <div className="w-8 h-8 rounded-xl bg-stone-200 text-stone-700 flex items-center justify-center shrink-0">
-                    <User className="w-4 h-4" />
+                  <div className="w-9 h-9 rounded-xl bg-stone-200 text-stone-700 flex items-center justify-center shrink-0">
+                    <User className="w-5 h-5" />
                   </div>
                 )}
               </div>
@@ -222,12 +188,12 @@ Bạn đang băn khoăn về vấn đề gì trên đồng ruộng hôm nay?`,
 
           {loading && (
             <div className="flex items-start gap-3 justify-start">
-              <div className="w-8 h-8 rounded-xl bg-emerald-700 text-white flex items-center justify-center shrink-0 animate-pulse">
-                <Bot className="w-4 h-4" />
+              <div className="w-9 h-9 rounded-xl bg-emerald-700 text-white flex items-center justify-center shrink-0">
+                <MessageCircle className="w-5 h-5" />
               </div>
-              <div className="bg-stone-50 border border-stone-200 rounded-2xl p-3 text-xs text-stone-500 flex items-center gap-2">
-                <RefreshCw className="w-3.5 h-3.5 animate-spin text-emerald-700" />
-                <span>Trợ lý đang tra cứu kiến thức bệnh học thực vật...</span>
+              <div className="bg-stone-50 border border-stone-200 rounded-2xl px-4 py-3 text-base text-stone-600 flex items-center gap-2">
+                <RefreshCw className="w-4 h-4 animate-spin text-emerald-700" />
+                <span>Đang tìm câu trả lời cho bác...</span>
               </div>
             </div>
           )}
@@ -235,45 +201,46 @@ Bạn đang băn khoăn về vấn đề gì trên đồng ruộng hôm nay?`,
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Quick prompt pills */}
-        <div className="px-4 py-2 border-t border-stone-100 bg-stone-50/70 overflow-x-auto flex items-center gap-2">
-          <span className="text-[11px] font-semibold text-stone-400 whitespace-nowrap">Gợi ý câu hỏi:</span>
+        {/* Simple Quick Questions */}
+        <div className="px-4 py-3 border-t border-stone-100 bg-stone-50 flex flex-wrap items-center gap-2">
+          <span className="text-sm font-semibold text-stone-600">Hỏi nhanh:</span>
           {quickQuestions.map((q, idx) => (
             <button
               key={idx}
               onClick={() => handleSend(q)}
-              className="px-2.5 py-1 rounded-lg text-xs font-medium bg-white hover:bg-emerald-50 text-stone-700 hover:text-emerald-900 border border-stone-200 whitespace-nowrap transition-colors cursor-pointer"
+              className="px-3.5 py-2 rounded-xl text-sm font-semibold bg-white hover:bg-emerald-50 text-stone-800 border border-stone-300 transition-colors cursor-pointer min-h-[40px]"
             >
               {q}
             </button>
           ))}
         </div>
 
-        {/* Input box */}
+        {/* Big Input Row */}
         <div className="p-3 sm:p-4 border-t border-stone-200 bg-white">
           <form
             onSubmit={(e) => {
               e.preventDefault();
               handleSend();
             }}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2.5"
           >
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Nhập thắc mắc về bệnh cây, triệu chứng hoặc cách phòng ngừa..."
-              className="flex-1 px-4 py-3 rounded-xl border border-stone-300 text-xs sm:text-sm focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 bg-stone-50/50"
+              placeholder="Gõ câu hỏi của bác vào đây..."
+              className="flex-1 min-h-[48px] px-4 py-2.5 rounded-xl border border-stone-300 text-base focus:outline-none focus:border-emerald-700 bg-stone-50/50"
             />
             <button
               type="submit"
               disabled={!input.trim() || loading}
-              className={`p-3 rounded-xl text-white font-bold transition-all ${
+              className={`min-h-[48px] px-5 py-2.5 rounded-xl text-white font-bold text-base flex items-center gap-2 transition-colors cursor-pointer ${
                 !input.trim() || loading
                   ? 'bg-stone-300 cursor-not-allowed'
-                  : 'bg-emerald-800 hover:bg-emerald-900 shadow-sm active:scale-95'
+                  : 'bg-emerald-700 hover:bg-emerald-800'
               }`}
             >
+              <span>Gửi</span>
               <Send className="w-4 h-4" />
             </button>
           </form>
